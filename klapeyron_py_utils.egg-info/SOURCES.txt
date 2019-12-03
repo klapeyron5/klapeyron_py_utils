@@ -1,8 +1,9 @@
 README.md
 setup.py
 klapeyron_py_utils/__init__.py
-klapeyron_py_utils/timings.py
 klapeyron_py_utils.egg-info/PKG-INFO
 klapeyron_py_utils.egg-info/SOURCES.txt
 klapeyron_py_utils.egg-info/dependency_links.txt
 klapeyron_py_utils.egg-info/top_level.txt
+klapeyron_py_utils/timings/__init__.py
+klapeyron_py_utils/timings/simple.py
