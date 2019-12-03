@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='klapeyron_py_utils',
-     version='0.0.1',
+     version='0.0.2',
      author="Nikita Klapeyron",
      author_email="nikitaklapeyron@gmail.com",
      description="Just my python reusable code",

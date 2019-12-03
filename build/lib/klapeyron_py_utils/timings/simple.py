@@ -1,7 +1,7 @@
 from time import process_time
 
 
-def get_time(f,n_avg=100,**f_kwargs):
+def get_time(f, n_avg=100, **f_kwargs):
     """
     Measures working time of any function
     :param f: function to be measured
@@ -9,9 +9,9 @@ def get_time(f,n_avg=100,**f_kwargs):
     :param f_kwargs: measured function args to pass
     :return: n_avg times averaged execution time of function f
     """
-    assert hasattr(f,'__call__')
+    assert hasattr(f, '__call__')
     f(**f_kwargs)
     t = process_time()
-    [f(**f_kwargs) for x in range(n_avg)]
-    wasted_time = (process_time() - t)/n_avg
+    for _ in (f(**f_kwargs) for _ in range(n_avg)): pass
+    wasted_time = (process_time() - t) / n_avg
     return wasted_time

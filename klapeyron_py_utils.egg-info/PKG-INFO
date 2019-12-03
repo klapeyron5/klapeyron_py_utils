@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: klapeyron-py-utils
-Version: 0.0.1
+Version: 0.0.2
 Summary: Just my python reusable code
 Home-page: https://github.com/klapeyron5/klapeyron_py_utils
 Author: Nikita Klapeyron
@@ -9,6 +9,12 @@ License: UNKNOWN
 Description: # klapeyron_py_utils
         
         Just a lot of my common reusable code for python
+        
+        # installation:
+        pip install git+https://github.com/klapeyron5/klapeyron_py_utils
+        
+        # usage:
+        import klapeyron_py_utils
         
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
