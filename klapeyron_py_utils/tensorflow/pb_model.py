@@ -13,5 +13,5 @@ class PB_Model:
 
     def predict(self, data, out_tensor='output'):
         assert isinstance(data, np.ndarray)
-        out = self.model.signatures['serving_default'](tf.convert_to_tensor(data))[out_tensor]
+        out = self.model.signatures['serving_default'](tf.convert_to_tensor(data))[out_tensor].numpy()
         return out

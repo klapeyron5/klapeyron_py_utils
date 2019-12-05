@@ -4,7 +4,7 @@ tf = import_tensorflow()
 
 def read_img_as_bytes_ndarray(img_path):
     """
-    Return img as base64 byte string and as np.ndarray
+    Returns img as base64 byte string and as np.ndarray
     :param img_path:
     :return: (img_bytes, img_ndarray)
     """
