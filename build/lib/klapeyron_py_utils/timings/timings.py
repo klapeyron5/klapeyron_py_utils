@@ -1,5 +1,5 @@
 from time import process_time
-from klapeyron_py_utils.types import types
+from klapeyron_py_utils.types import common_types
 
 
 def get_time(f, n_avg=100, warmup=True, **f_kwargs):
@@ -12,7 +12,7 @@ def get_time(f, n_avg=100, warmup=True, **f_kwargs):
     :return: n_avg times averaged execution time of function f
     """
     assert hasattr(f, '__call__')
-    types.assert_any_int(n_avg)
+    common_types.assert_any_int(n_avg)
     assert n_avg > 0
     if warmup: f(**f_kwargs)
     t = process_time()

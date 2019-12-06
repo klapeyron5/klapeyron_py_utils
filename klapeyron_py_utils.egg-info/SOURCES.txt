@@ -13,6 +13,6 @@ klapeyron_py_utils/tensorflow/pb_model.py
 klapeyron_py_utils/timings/__init__.py
 klapeyron_py_utils/timings/timings.py
 klapeyron_py_utils/types/__init__.py
-klapeyron_py_utils/types/types.py
+klapeyron_py_utils/types/common_types.py
 klapeyron_py_utils/video/__init__.py
 klapeyron_py_utils/video/ffmpeg.py
