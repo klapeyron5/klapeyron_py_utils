@@ -8,8 +8,8 @@ class PB_Model:
         self.pb_path = pb_path
         self.model = tf.saved_model.load(self.pb_path)
 
-    def __call__(self, data):
-        return self.predict(data)
+    def __call__(self, *args, **kwargs):
+        return self.predict(*args, **kwargs)
 
     def predict(self, data, out_tensor='output'):
         assert isinstance(data, np.ndarray)
