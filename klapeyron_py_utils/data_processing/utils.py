@@ -9,6 +9,7 @@ def mov_avg(x, n=3):
     :param n: moving window
     :return: trimmed x, processed by mov avg (trimmed for averaging window to be filled with existing values)
     """
-    ret = np.cumsum(x, dtype=float)
+    assert isinstance(x, np.ndarray)
+    ret = np.cumsum(x, dtype=float, axis=0)
     ret[n:] = ret[n:] - ret[:-n]
     return ret[n - 1:] / n
