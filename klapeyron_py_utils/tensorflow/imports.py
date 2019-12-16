@@ -11,7 +11,7 @@ def import_tensorflow(log_level=3):
     3     | ERROR            | Filter out all messages
     :return: tensorflow package
     """
-    common_types.assert_any_int(log_level)
+    common_types.is_any_int(log_level)
     assert 0 <= log_level <= 3
     log_level_values = ['DEBUG','INFO','WARNING','ERROR']
     import os
