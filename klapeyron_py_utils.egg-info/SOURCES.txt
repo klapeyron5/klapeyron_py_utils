@@ -9,6 +9,8 @@ klapeyron_py_utils/data_processing/__init__.py
 klapeyron_py_utils/data_processing/utils.py
 klapeyron_py_utils/data_visualization/__init__.py
 klapeyron_py_utils/data_visualization/utils.py
+klapeyron_py_utils/dsp/1.py
+klapeyron_py_utils/dsp/__init__.py
 klapeyron_py_utils/image/__init__.py
 klapeyron_py_utils/image/io.py
 klapeyron_py_utils/tensorflow/__init__.py
