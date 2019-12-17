@@ -1,4 +1,4 @@
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
+from klapeyron_py_utils.tensorflow_utils.imports import import_tensorflow
 tf = import_tensorflow()
 
 
