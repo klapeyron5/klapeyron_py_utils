@@ -25,9 +25,9 @@ class PB_Model:
         i = 0
         while (i + 1) * batch_size < len(data):
             batch_out = self.predict(data[i * batch_size:(i + 1) * batch_size], out_tensor=out_tensor)
-            out.append(batch_out)
+            out.extend(batch_out)
             i += 1
         batch_out = self.predict(data[i*batch_size:], out_tensor=out_tensor)
-        out.append(batch_out)
+        out.extend(batch_out)
         out = np.array(out)
         return out
