@@ -39,12 +39,27 @@ def ffmpeg_video_from_storyboard(storyboard_dir, video_path, storyboard_fps, sto
     os.system(request)
 
 
-def get_storyboard_paths_from_video(video_path, storyboard_dir, storyboard_fps, storyboard_extension='.jpg'):
+def ffmpeg_trim_video(video_path, start, period, dst_path='./tmp.mp4'):
+    assert os.path.isfile(video_path)
+    assert video_path.endswith(video_extensions)
+    assert dst_path.endswith(video_extensions)
+    assert start >= 0
+    assert period > 0
+    request = 'ffmpeg -hide_banner -loglevel panic' + \
+              ' -i ' + video_path + \
+              ' -ss ' + str(start) + \
+              ' -t ' + str(period) + \
+              ' ' + dst_path
+    os.system(request)
+
+
+def get_storyboard_paths_from_video(video_path, storyboard_dir, storyboard_fps, trim=None, storyboard_extension='.jpg'):
     """
     Returns paths of frames from storyboard from video
     :param video_path: path of video to storyboard
     :param storyboard_dir: empty or not existing folder to store frames of storyboard
     :param storyboard_fps: final storyboard fps
+    :param trim: (start, finish) trim borders in seconds
     :param storyboard_extension: extension of final frames of storyboard
     :return:
     """
@@ -54,6 +69,14 @@ def get_storyboard_paths_from_video(video_path, storyboard_dir, storyboard_fps, 
             return []
     else:
         os.mkdir(storyboard_dir)
+    if trim is not None:
+        assert len(trim) == 2
+        trim_name = 'tmp.mp4'
+        trim_path = os.path.join(storyboard_dir, trim_name)
+        assert not trim_path.endswith(storyboard_extension)
+        ffmpeg_trim_video(video_path, trim[0], trim[1], trim_path)
+        assert os.path.isfile(trim_path), 'ERROR smth went wrong with trimming'
+        video_path = trim_path
     ffmpeg_storyboard_from_video(video_path, storyboard_dir, storyboard_fps, storyboard_extension)
     storyboard_paths = glob.glob(storyboard_dir + '/*' + storyboard_extension)
     return storyboard_paths
