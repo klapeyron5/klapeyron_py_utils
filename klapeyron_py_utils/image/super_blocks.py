@@ -50,7 +50,15 @@ def get_super_blocks_from_block_size(img, block_h, block_w, blocks_fit=False):
             assert residue_size == 0
         first_block_size = residue_size // 2
         last_block_size = residue_size - residue_size // 2
-        blocks_size = [first_block_size] + full_blocks_n * [block_size] + [last_block_size]
+        if first_block_size == 0:
+            st = []
+        else:
+            st = [first_block_size]
+        if last_block_size == 0:
+            fin = []
+        else:
+            fin = [last_block_size]
+        blocks_size = st + full_blocks_n * [block_size] + fin
         return blocks_size
     blocks_size_y = get_blocks_size(h, block_h)
     blocks_size_x = get_blocks_size(w, block_w)
