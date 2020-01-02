@@ -3,7 +3,7 @@ import numpy as np
 
 def mov_avg(x, n=3, padding='valid'):
     """
-    The logic of moving averaging realization is totally copied from https://stackoverflow.com/a/14314054/5030761
+    The logic of moving averaging realization is copied from https://stackoverflow.com/a/14314054/5030761
     :param x: 1D array to process
     :param n: moving window
     :param padding: guess x=[0,1,2,3,4,5], n=5
