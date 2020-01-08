@@ -3,8 +3,8 @@ assert tf.__version__[0] == '1'
 
 
 def export_tf1(session, in_tnsr_fullname, out_tnsr_fullname, export_dir='./export'):
-    assert isinstance(str, in_tnsr_fullname)
-    assert isinstance(str, out_tnsr_fullname)
+    assert isinstance(in_tnsr_fullname, str)
+    assert isinstance(out_tnsr_fullname, str)
 
     in_tnsr_name = in_tnsr_fullname.split(':')[0]
     out_tnsr_name = out_tnsr_fullname.split(':')[0]
