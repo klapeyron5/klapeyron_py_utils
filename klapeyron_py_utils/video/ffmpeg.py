@@ -66,13 +66,14 @@ def __tmpdir_routine(storyboard_dir='./tmp_ffmpeg', storyboard_extension='.jpg')
                 assert len(dirs) == 0, err_msg
                 extensions = [x.split('.')[-1] for x in files]
                 s, c = np.unique(extensions, return_counts=True)
+                s = np.array(['.'+x for x in s])
                 assert len(s) <= 2, err_msg
                 assert storyboard_extension in s
                 ind_stor = np.where(s == storyboard_extension)[0][0]
                 ind_trim = ind_stor - 1
                 if len(s) == 2:
                     assert c[ind_trim] == 1, err_msg
-                assert s[ind_trim] in video_extensions
+                    assert s[ind_trim] in video_extensions
                 # clear dir
                 for file in files:
                     os.remove(os.path.join(pardir,file))
