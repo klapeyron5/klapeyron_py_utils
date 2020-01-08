@@ -1,5 +1,6 @@
 import os
 import glob
+import numpy as np
 
 
 video_extensions = ('.mp4', '.avi', '.mov', '.MOV')
@@ -53,7 +54,38 @@ def ffmpeg_trim_video(video_path, start, period, dst_path='./tmp.mp4'):
     os.system(request)
 
 
-def get_storyboard_paths_from_video(video_path, storyboard_dir, storyboard_fps, trim=None, storyboard_extension='.jpg'):
+def __tmpdir_routine(storyboard_dir='./tmp_ffmpeg', storyboard_extension='.jpg'):
+    assert isinstance(storyboard_dir, str)
+    if os.path.isdir(storyboard_dir):
+        err_msg = 'ERASE PROTECTION: ' + storyboard_dir + ' contains not only tmp ffmpeg data (frames and/or trimmed video)'
+        if len(os.listdir(storyboard_dir)) > 0:
+            def check_only_frames_and_one_video():
+                # frames from storyboard
+                # one video from trimming
+                pardir, dirs, files = next(os.walk(storyboard_dir))
+                assert len(dirs) == 0, err_msg
+                extensions = [x.split('.')[-1] for x in files]
+                s, c = np.unique(extensions, return_counts=True)
+                assert len(s) <= 2, err_msg
+                assert storyboard_extension in s
+                ind_stor = np.where(s == storyboard_extension)[0][0]
+                ind_trim = ind_stor - 1
+                if len(s) == 2:
+                    assert c[ind_trim] == 1, err_msg
+                assert s[ind_trim] in video_extensions
+                # clear dir
+                for file in files:
+                    os.remove(os.path.join(pardir,file))
+            check_only_frames_and_one_video()
+    else:
+        err_msg = 'Can not create dir: '+storyboard_dir
+        try:
+            os.mkdir(storyboard_dir)
+        except Exception:
+            raise Exception(err_msg)
+
+
+def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='./tmp_ffmpeg', trim=None, storyboard_extension='.jpg'):
     """
     Returns paths of frames from storyboard from video
     :param video_path: path of video to storyboard
@@ -63,12 +95,7 @@ def get_storyboard_paths_from_video(video_path, storyboard_dir, storyboard_fps, 
     :param storyboard_extension: extension of final frames of storyboard
     :return:
     """
-    if os.path.isdir(storyboard_dir):
-        if len(os.listdir(storyboard_dir)) > 0:
-            print('ERASE PROTECTION: ' + storyboard_dir + ' should be empty or does not exist')
-            return []
-    else:
-        os.mkdir(storyboard_dir)
+    __tmpdir_routine(storyboard_dir, storyboard_extension)
     if trim is not None:
         assert len(trim) == 2
         trim_name = 'tmp.mp4'
