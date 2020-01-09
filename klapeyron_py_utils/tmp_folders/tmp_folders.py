@@ -12,8 +12,8 @@ def __create_tmp(tmp_dir):
 
 
 class Tmp_erase_protection:
-    def __init__(self, tmp_dir):
-        self.tmp_dir = tmp_dir
+    def __call__(self, tmp_dir):  # TODO make like interface
+        pass
 
 
 def new_tmp(assert_tmp_content_only, tmp_dir='./tmp'):
@@ -30,7 +30,7 @@ def new_tmp(assert_tmp_content_only, tmp_dir='./tmp'):
         err_msg = 'ERROR: erase protection: ' + tmp_dir + ' contains not only tmp data'
         if len(os.listdir(tmp_dir)) > 0:
             try:
-                assert_tmp_content_only()
+                assert_tmp_content_only(tmp_dir)
             except Exception:
                 raise Exception(err_msg)
             try:

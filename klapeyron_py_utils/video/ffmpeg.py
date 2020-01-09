@@ -56,14 +56,13 @@ def ffmpeg_trim_video(video_path, start, period, dst_path='./tmp.mp4'):
 
 
 class Tmp_erase_protection(Tmp_erase_protection):
-    def __init__(self, tmp_dir, storyboard_extension, ):
-        super().__init__(tmp_dir)
+    def __init__(self, storyboard_extension):
         self.storyboard_extension = storyboard_extension
 
-    def __call__(self):
+    def __call__(self, tmp_dir):
         # frames from storyboard
         # one video from trimming
-        pardir, dirs, files = next(os.walk(self.tmp_dir))
+        pardir, dirs, files = next(os.walk(tmp_dir))
         assert len(dirs) == 0
         extensions = [x.split('.')[-1] for x in files]
         s, c = np.unique(extensions, return_counts=True)
@@ -90,7 +89,7 @@ def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='
     :param storyboard_extension: extension of final frames of storyboard
     :return:
     """
-    new_tmp(storyboard_dir, Tmp_erase_protection(storyboard_dir, storyboard_extension))
+    new_tmp(Tmp_erase_protection(storyboard_extension), storyboard_dir)
     if trim is not None:
         assert len(trim) == 2
         trim_name = 'tmp.mp4'
