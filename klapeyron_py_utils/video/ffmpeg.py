@@ -90,7 +90,7 @@ def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='
     :param storyboard_extension: extension of final frames of storyboard
     :return:
     """
-    new_tmp(storyboard_dir, Tmp_erase_protection())
+    new_tmp(storyboard_dir, Tmp_erase_protection(storyboard_dir, storyboard_extension))
     if trim is not None:
         assert len(trim) == 2
         trim_name = 'tmp.mp4'

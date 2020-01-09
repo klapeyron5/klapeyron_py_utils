@@ -16,15 +16,15 @@ class Tmp_erase_protection:
         self.tmp_dir = tmp_dir
 
 
-def new_tmp(tmp_dir='./tmp', assert_tmp_content_only=lambda *args, **kwargs: None):
+def new_tmp(assert_tmp_content_only, tmp_dir='./tmp'):
     """
     Create new tmp folder (clear it if already exists)
     :param tmp_dir:
-    :param assert_tmp_content_only: callable argumentless
+    :param assert_tmp_content_only: callable argumentless; should check if data in tmp_dir is only tmp data
     :return:
     """
     assert isinstance(tmp_dir, str)
-    assert callable(assert_tmp_content_only)
+    assert isinstance(assert_tmp_content_only, Tmp_erase_protection)
     tmp_dir = os.path.realpath(tmp_dir)
     if os.path.isdir(tmp_dir):
         err_msg = 'ERROR: erase protection: ' + tmp_dir + ' contains not only tmp data'
