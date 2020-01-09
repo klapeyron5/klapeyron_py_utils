@@ -1,6 +1,7 @@
 import os
 import glob
 import numpy as np
+from klapeyron_py_utils.tmp_folders.tmp_folders import new_tmp, Tmp_erase_protection
 
 
 video_extensions = ('.mp4', '.avi', '.mov', '.MOV')
@@ -54,36 +55,29 @@ def ffmpeg_trim_video(video_path, start, period, dst_path='./tmp.mp4'):
     os.system(request)
 
 
-def __tmpdir_routine(storyboard_dir='./tmp_ffmpeg', storyboard_extension='.jpg'):
-    assert isinstance(storyboard_dir, str)
-    if os.path.isdir(storyboard_dir):
-        err_msg = 'ERASE PROTECTION: ' + storyboard_dir + ' contains not only tmp ffmpeg data (frames and/or trimmed video)'
-        if len(os.listdir(storyboard_dir)) > 0:
-            def check_only_frames_and_one_video():
-                # frames from storyboard
-                # one video from trimming
-                pardir, dirs, files = next(os.walk(storyboard_dir))
-                assert len(dirs) == 0, err_msg
-                extensions = [x.split('.')[-1] for x in files]
-                s, c = np.unique(extensions, return_counts=True)
-                s = np.array(['.'+x for x in s])
-                assert len(s) <= 2, err_msg
-                assert storyboard_extension in s
-                ind_stor = np.where(s == storyboard_extension)[0][0]
-                ind_trim = ind_stor - 1
-                if len(s) == 2:
-                    assert c[ind_trim] == 1, err_msg
-                    assert s[ind_trim] in video_extensions
-                # clear dir
-                for file in files:
-                    os.remove(os.path.join(pardir,file))
-            check_only_frames_and_one_video()
-    else:
-        err_msg = 'Can not create dir: '+storyboard_dir
-        try:
-            os.mkdir(storyboard_dir)
-        except Exception:
-            raise Exception(err_msg)
+class Tmp_erase_protection(Tmp_erase_protection):
+    def __init__(self, tmp_dir, storyboard_extension, ):
+        super().__init__(tmp_dir)
+        self.storyboard_extension = storyboard_extension
+
+    def __call__(self):
+        # frames from storyboard
+        # one video from trimming
+        pardir, dirs, files = next(os.walk(self.tmp_dir))
+        assert len(dirs) == 0
+        extensions = [x.split('.')[-1] for x in files]
+        s, c = np.unique(extensions, return_counts=True)
+        s = np.array(['.'+x for x in s])
+        assert len(s) <= 2
+        assert self.storyboard_extension in s
+        ind_stor = np.where(s == self.storyboard_extension)[0][0]
+        ind_trim = ind_stor - 1
+        if len(s) == 2:
+            assert c[ind_trim] == 1
+            assert s[ind_trim] in video_extensions
+        # clear dir
+        for file in files:
+            os.remove(os.path.join(pardir,file))
 
 
 def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='./tmp_ffmpeg', trim=None, storyboard_extension='.jpg'):
@@ -96,7 +90,7 @@ def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='
     :param storyboard_extension: extension of final frames of storyboard
     :return:
     """
-    __tmpdir_routine(storyboard_dir, storyboard_extension)
+    new_tmp(storyboard_dir, Tmp_erase_protection())
     if trim is not None:
         assert len(trim) == 2
         trim_name = 'tmp.mp4'
