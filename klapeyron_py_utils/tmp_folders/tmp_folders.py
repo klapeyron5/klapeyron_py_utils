@@ -1,5 +1,6 @@
 import os
 import shutil
+import inspect
 
 
 def __create_tmp(tmp_dir):
@@ -28,6 +29,7 @@ def new_tmp(assert_tmp_content_only, tmp_dir='./tmp'):
     """
     assert isinstance(tmp_dir, str)
     assert isinstance(assert_tmp_content_only, Tmp_erase_protection)
+    inspect.getfullargspec(assert_tmp_content_only.__call__)[0]  # TODO type check
     tmp_dir = os.path.realpath(tmp_dir)
     if os.path.isdir(tmp_dir):
         err_msg = 'ERROR: erase protection: ' + tmp_dir + ' contains not only tmp data'

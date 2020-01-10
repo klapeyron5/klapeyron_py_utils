@@ -104,3 +104,5 @@ def get_storyboard_paths_from_video(video_path, storyboard_fps, storyboard_dir='
     ffmpeg_storyboard_from_video(video_path, storyboard_dir, storyboard_fps, storyboard_extension)
     storyboard_paths = glob.glob(storyboard_dir + '/*' + storyboard_extension)
     return storyboard_paths
+
+get_storyboard_paths_from_video('E:\cos\soccer/video/soc-fifa1-big1.mp4', 20)
