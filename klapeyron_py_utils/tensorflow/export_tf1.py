@@ -9,13 +9,9 @@ def export_tf1(session, in_tnsr_fullname, out_tnsr_fullname, export_dir='./expor
     in_tnsr_name = in_tnsr_fullname.split(':')[0]
     out_tnsr_name = out_tnsr_fullname.split(':')[0]
 
-    output_graph_def = tf.graph_util.convert_variables_to_constants(session, session.graph.as_graph_def(), [out_tnsr_name])
-    tf.train.write_graph(output_graph_def, './tmp_write_graph', name='tmp_write_graph', as_text=False)
+    graph_def = tf.graph_util.convert_variables_to_constants(session, session.graph.as_graph_def(), [out_tnsr_name])
 
     tf.reset_default_graph()
-    graph_def = tf.GraphDef()
-    with tf.gfile.GFile('./tmp_write_graph/tmp_write_graph', "rb") as f:
-        graph_def.ParseFromString(f.read())
     [out] = tf.import_graph_def(graph_def, name="", return_elements=[out_tnsr_fullname])
     g = out.graph
 
