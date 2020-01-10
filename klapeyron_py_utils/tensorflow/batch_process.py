@@ -1,11 +1,12 @@
 import numpy as np
 from klapeyron_py_utils.tensorflow.imports import import_tensorflow
 tf = import_tensorflow()
+from tensorflow.python.framework.tensor_spec import TensorSpec
 
 
 def batch_process(fn):
     specs = list(fn.function_spec.flat_input_signature)
-    # assert all(isinstance(x, TensorSpec) for x in specs)
+    assert all(isinstance(x, TensorSpec) for x in specs)
     @tf.function(input_signature=specs+[tf.TensorSpec([], tf.uint16)])
     def wrapper(data, bs):
         bs = tf.cast(bs, tf.int32)
