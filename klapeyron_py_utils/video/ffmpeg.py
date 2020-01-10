@@ -37,7 +37,10 @@ def ffmpeg_video_from_storyboard(storyboard_dir, video_path, storyboard_fps, sto
     assert isinstance(video_path, str)
     assert isinstance(storyboard_fps, int)
 
-    request = 'ffmpeg -r ' + str(storyboard_fps) + ' -i ' + storyboard_dir + '/%04d' + storyboard_extension + ' ' + video_path
+    request = 'ffmpeg -hide_banner -loglevel panic' \
+              ' -r ' + str(storyboard_fps) + \
+              ' -i ' + storyboard_dir + '/%04d' + storyboard_extension + \
+              ' ' + video_path
     os.system(request)
 
 
