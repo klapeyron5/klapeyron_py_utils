@@ -3,12 +3,13 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-# with open('requirements.txt') as f:
-#     required = f.read().splitlines()
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+print('required ', required)
 
 setuptools.setup(
     name='klapeyron_py_utils',
-    version='0.3.9',
+    version='0.4.0',
     author="Nikita Klapeyron",
     author_email="nikitaklapeyron@gmail.com",
     description="Just my python reusable code",
@@ -20,5 +21,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    # install_requires=required,
+    install_requires=required,
 )
