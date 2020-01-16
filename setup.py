@@ -5,11 +5,10 @@ with open("README.md", "r") as fh:
 
 with open('requirements.txt') as f:
     required = f.read().splitlines()
-print('required ', required)
 
 setuptools.setup(
     name='klapeyron_py_utils',
-    version='0.4.0',
+    version='0.4.0.0',
     author="Nikita Klapeyron",
     author_email="nikitaklapeyron@gmail.com",
     description="Just my python reusable code",
