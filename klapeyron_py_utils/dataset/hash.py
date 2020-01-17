@@ -17,10 +17,12 @@ def calculate_dataset_hash(parent_dir: str) -> str:
     assert os.path.isdir(parent_dir)
     print('calculating hash of dataset on path:', parent_dir, '...')
     files_hashes = []
+    true_files_hashes = {}
     for pardir, _, files in os.walk(parent_dir):
         for file in files:
             file = os.path.join(pardir, file)
             hash = get_md5_adler32_from_file(file, True)
+            true_files_hashes[file] = hash
             file = file.replace(os.path.sep, '$')
             hash = get_md5_adler32(bytes(file+hash, 'utf8'), True)
             files_hashes.append(hash)
@@ -29,7 +31,7 @@ def calculate_dataset_hash(parent_dir: str) -> str:
     for hash in files_hashes:
         general_string += hash
     dataset_hash = get_md5_adler32(bytes(general_string, 'utf8'), True)
-    return dataset_hash
+    return dataset_hash, true_files_hashes
 
 
 def get_md5_adler32(b, onestr=False):
@@ -58,3 +60,7 @@ def get_md5_adler32_from_file(path, onestr=False):
     with open(path, 'rb') as f:
         f = f.read()
     return get_md5_adler32(f, onestr)
+
+
+# a = calculate_dataset_hash('C:/Users\klapeyron-server-win/YandexDisk/rPPG/benchmark\src\data')
+# print()
