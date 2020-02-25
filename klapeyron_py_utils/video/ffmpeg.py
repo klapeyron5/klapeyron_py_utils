@@ -5,7 +5,7 @@ from klapeyron_py_utils.tmp_folders.tmp_folders import new_tmp, Tmp_erase_protec
 from klapeyron_py_utils.types.common_types import is_any_int
 
 
-video_extensions = ('.mp4', '.avi', '.mov', '.MOV')
+video_extensions = ('.mp4', '.avi', '.mov', '.MOV', '.webm')
 
 
 def ffmpeg_storyboard_from_video(video_path, storyboard_dir, storyboard_fps, storyboard_extension='.jpg', qscale=2):
