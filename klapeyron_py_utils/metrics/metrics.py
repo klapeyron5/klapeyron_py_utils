@@ -1,4 +1,18 @@
 import numpy as np
+from klapeyron_py_utils.tensorflow.imports import import_tensorflow
+tf = import_tensorflow(3)
+
+
+def loss(labels, logits):
+    out = tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+    out = tf.reduce_mean(out)
+    return out
+
+
+def acc(labels, predicts):
+    out = tf.keras.metrics.binary_accuracy(labels, predicts, threshold=0.5)
+    out = tf.reduce_mean(out)
+    return out
 
 
 def bin_prob_vectors_to_labels(vectors):

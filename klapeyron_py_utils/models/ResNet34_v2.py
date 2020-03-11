@@ -4,9 +4,11 @@ from klapeyron_py_utils.models.blocks.resnet import Layer_conv_bn_relu
 from klapeyron_py_utils.models.blocks.resnet import Residual_block_compact_v3, Stack_of_blocks, FC_logits
 from klapeyron_py_utils.models.configs.model_train_config import Model_Train_Config
 from klapeyron_py_utils.models.configs.model_config import Model_Config
+from lecorbusier.nets.base import Base
+from lecorbusier.blocks.metrics import loss, acc
 
 
-class ResNet34_v2(tf.Module):
+class ResNet34_v2(Base):
 
     OUTPUT_CHANNELS = 2
     bs = (None,)
@@ -55,16 +57,18 @@ class ResNet34_v2(tf.Module):
                 tf.TensorSpec(self.bs + self.input_shape, tf.float32),
                 tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
             ])
-
-        self.get_name = tf.function(
-            lambda : self.NAME,
-            input_signature=[])
-        self.get_model_config = tf.function(
-            model_config.get_config,
-            input_signature=[])
-        self.get_train_config = tf.function(
-            train_config.get_config,
-            input_signature=[])
+        self.loss = tf.function(
+            loss,
+            input_signature=[
+                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
+                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
+            ])
+        self.acc = tf.function(
+            acc,
+            input_signature=[
+                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
+                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
+            ])
 
     @tf.function
     def __call__(self, x):
@@ -97,18 +101,6 @@ class ResNet34_v2(tf.Module):
         grads = tape.gradient(loss, self.trainable_variables)
         self.optimizer.apply_gradients(list(zip(grads, self.trainable_variables)))
         return loss, acc
-
-    @staticmethod
-    def loss(labels, logits):
-        out = tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits)
-        out = tf.reduce_mean(out)
-        return out
-
-    @staticmethod
-    def acc(labels, predicts):
-        out = tf.keras.metrics.binary_accuracy(labels, predicts, threshold=0.5)
-        out = tf.reduce_mean(out)
-        return out
 
     def reg_loss(self):
         l2_loss = tf.nn.l2_loss(0.0)
