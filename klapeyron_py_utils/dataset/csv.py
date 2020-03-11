@@ -14,6 +14,9 @@ class CSV:
 
     SAMPLE_FILE = 'file'
 
+    FOLD_TRN = 0
+    FOLD_VAL = 1
+
     @staticmethod
     def read_data_csv(csv_path: str, sample_type: SAMPLE_FILE, add_real_path_col=True, check_dataset_hash=False, get_stat=False,
                       subset_name_for_general_info_json=None)-> pd.DataFrame:
@@ -29,25 +32,7 @@ class CSV:
 
         data_csv = pd.read_csv(csv_path, sep=',', index_col='Unnamed: 0')
 
-        def assert_data_csv():
-            CSV.check_csv_columns(data_csv, sample_type)
-
-            # all paths start with 'data/'
-            start_path = CSV.DATASET_DATA_FOLDER_NAME + '/'
-            errmsg = 'each sample should start from ' + CSV.DATASET_DATA_FOLDER_NAME + '/'
-            assert all([x[:5] == start_path for x in data_csv[CSV.csv_col_path]]), errmsg
-
-            # no repeated paths
-            assert len(set(data_csv[CSV.csv_col_path].values)) == len(data_csv[CSV.csv_col_path])
-
-            # all paths exist
-            realpath = [os.path.join(dataset_path, x) for x in data_csv[CSV.csv_col_path]]
-            assert all([os.path.isfile(x) for x in realpath])
-            if add_real_path_col:
-                # add real paths as new column
-                data_csv[CSV.csv_col_realpath] = realpath
-
-        assert_data_csv()
+        CSV.assert_data_csv(data_csv, sample_type, dataset_path, add_real_path_col)
 
         assert isinstance(check_dataset_hash, bool)
         if check_dataset_hash:
@@ -70,6 +55,25 @@ class CSV:
         data_path = os.path.join(dataset_path, CSV.DATASET_DATA_FOLDER_NAME)
         assert os.path.isdir(data_path)
         return dataset_path, data_path
+
+    @staticmethod
+    def assert_data_csv(data_csv, sample_type, dataset_path, add_real_path_col):
+        CSV.check_csv_columns(data_csv, sample_type)
+
+        # all paths start with 'data/'
+        start_path = CSV.DATASET_DATA_FOLDER_NAME + '/'
+        errmsg = 'each sample should start from ' + CSV.DATASET_DATA_FOLDER_NAME + '/'
+        assert all([x[:5] == start_path for x in data_csv[CSV.csv_col_path]]), errmsg
+
+        # no repeated paths
+        assert len(set(data_csv[CSV.csv_col_path].values)) == len(data_csv[CSV.csv_col_path])
+
+        # all paths exist
+        realpath = [os.path.join(dataset_path, x) for x in data_csv[CSV.csv_col_path]]
+        assert all([os.path.isfile(x) for x in realpath])
+        if add_real_path_col:
+            # add real paths as new column
+            data_csv[CSV.csv_col_realpath] = realpath
 
     @staticmethod
     def check_csv_columns(csv: pd.DataFrame, sample_type):
