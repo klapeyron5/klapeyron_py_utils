@@ -162,6 +162,16 @@ class CSV:
     general_info_key__dataset_and_markup_hash = 'dataset_and_markup_hash'
     dataset_general_info_json = {general_info_key__dataset_hash: None, general_info_key__dataset_and_markup_hash: None}
 
+    @staticmethod
+    def append_row(csv, path, label, fold):
+        row = pd.DataFrame(columns=CSV.CSV_COLUMNS_FILE)
+        row[CSV.csv_col_label] = [label]
+        row[CSV.csv_col_fold] = [fold]
+        path = path.replace(os.path.sep, '/')
+        row[CSV.csv_col_path] = [path]
+        df_append_single_row(csv, row)
+        return csv
+
 
 def df_append_single_row(df: pd.DataFrame, row_df):
         try:
