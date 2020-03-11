@@ -60,7 +60,7 @@ class Data_manager:
         self.b = 0
 
         files = self.epoch_files_by_fold[CSV.FOLD_TRN]
-        files = (np.random.permutation(x) for x in files)
+        files = [np.random.permutation(x) for x in files]
 
         min_len = min([len(x) for x in files])
         self.epoch_files = [x[:min_len] for x in files]
