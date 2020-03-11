@@ -48,7 +48,7 @@ class CSV:
 
     @staticmethod
     def check_dataset_structure(csv_path: str):
-        assert assert_filepath(csv_path)
+        assert_filepath(csv_path)
         assert csv_path.endswith('.csv')
         dataset_path = os.path.dirname(csv_path)
         assert os.path.isdir(dataset_path)
