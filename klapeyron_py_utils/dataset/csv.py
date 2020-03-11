@@ -144,12 +144,10 @@ class CSV:
         print()
 
     csv_col_path = 'path'
-    csv_col_filename = 'filename'
     csv_col_label = 'label'
     csv_col_fold = 'fold'
     CSV_COLUMNS_FILE = [
         csv_col_path,
-        csv_col_filename,
         csv_col_label,
         csv_col_fold,
     ]
