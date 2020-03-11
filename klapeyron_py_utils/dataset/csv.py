@@ -77,11 +77,8 @@ class CSV:
 
     @staticmethod
     def check_csv_columns(csv: pd.DataFrame, sample_type):
-        if sample_type == CSV.SAMPLE_FILE:
-            assert set(CSV.CSV_COLUMNS_FILE) - set(csv.columns) == set()
-        else:
-            errmsg = 'Wrong sample type: ' + str(sample_type)
-            raise Exception(errmsg)
+        errmsg = 'Wrong sample type: ' + str(sample_type)
+        assert set(CSV.SAMPLE_COLUMNS_DICT[sample_type]) - set(csv.columns) == set(), errmsg
 
     @staticmethod
     def __check_dataset_markup_hash(data_csv: pd.DataFrame, origin_data_csv_path: str, dataset_path: str, subset_name: str):
@@ -155,6 +152,10 @@ class CSV:
         csv_col_label,
         csv_col_fold,
     ]
+
+    SAMPLE_COLUMNS_DICT = {
+        SAMPLE_FILE: CSV_COLUMNS_FILE
+    }
 
     csv_col_realpath = 'realpath'
 

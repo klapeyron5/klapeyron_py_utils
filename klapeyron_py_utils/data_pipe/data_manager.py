@@ -1,12 +1,13 @@
 import os
 import numpy as np
-from klapeyron_py_utils.dataset.csv import CSV, df_append
+from klapeyron_py_utils.dataset.csv import df_append
 from klapeyron_py_utils.data_pipe.data_process_pipe import Data_process_pipe
 from klapeyron_py_utils.types.common_types import is_any_int
 
 
 class Data_manager:
-    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, start_ep=None, sample_type=CSV.SAMPLE_FILE, select_from_dataset=None):
+    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, sample_type, csv_class, start_ep=None, select_from_dataset=None):
+        self.__set_csv_class(csv_class)
         self.__get_dataset(samples_csv_paths, sample_type, select_from_dataset)
         self.set_batch_size(batch_size)
         self.__set_folds_files()
@@ -16,9 +17,14 @@ class Data_manager:
         self.set_preprocess_trn(preproc_trn)
         self.set_preprocess_val(preproc_val)
 
-    def __get_dataset(self, samples_csv_path, sample_type=CSV.SAMPLE_FILE, select_from_dataset=None):
+    def __set_csv_class(self, csv_class):
+        from klapeyron_py_utils.dataset.csv import CSV
+        assert isinstance(csv_class, CSV)
+        self.CSV = csv_class
+
+    def __get_dataset(self, samples_csv_path, sample_type, select_from_dataset=None):
         def f(csv_path):
-            samples_csv = CSV.read_data_csv(csv_path, sample_type=sample_type, add_real_path_col=True, check_dataset_hash=False, get_stat=True)
+            samples_csv = self.CSV.read_data_csv(csv_path, sample_type=sample_type, add_real_path_col=True, check_dataset_hash=False, get_stat=True)
             return samples_csv
 
         try:
@@ -40,18 +46,18 @@ class Data_manager:
         if select_from_dataset is not None:
             assert callable(select_from_dataset)
             self.samples_csv = select_from_dataset(self.samples_csv)
-            CSV.check_csv_columns(self.samples_csv, sample_type)
+            self.CSV.check_csv_columns(self.samples_csv, sample_type)
 
     def __set_folds_files(self):
-        self.folds_set = set(self.samples_csv[CSV.csv_col_fold].values)
-        self.labels_set = set(self.samples_csv[CSV.csv_col_label].values)
+        self.folds_set = set(self.samples_csv[self.CSV.csv_col_fold].values)
+        self.labels_set = set(self.samples_csv[self.CSV.csv_col_label].values)
         self.epoch_files_by_fold = {}
         for fold in self.folds_set:
-            fold_csv = self.samples_csv.loc[self.samples_csv[CSV.csv_col_fold] == fold]
+            fold_csv = self.samples_csv.loc[self.samples_csv[self.CSV.csv_col_fold] == fold]
             self.epoch_files_by_fold[fold] = []
             for label in self.labels_set:
-                label_csv = fold_csv.loc[fold_csv[CSV.csv_col_label] == label]
-                files = label_csv[CSV.csv_col_realpath].values
+                label_csv = fold_csv.loc[fold_csv[self.CSV.csv_col_label] == label]
+                files = label_csv[self.CSV.csv_col_realpath].values
                 print('fold', fold, '; len(', label, '):', len(files))
                 self.epoch_files_by_fold[fold].append(files)
 
@@ -59,17 +65,12 @@ class Data_manager:
         self.p = 0
         self.b = 0
 
-        files = self.epoch_files_by_fold[CSV.FOLD_TRN]
+        files = self.epoch_files_by_fold[self.CSV.FOLD_TRN]
         files = [np.random.permutation(x) for x in files]
 
         min_len = min([len(x) for x in files])
         self.epoch_files = [x[:min_len] for x in files]
-        # self.epoch_files_0 = files_0[:min_len]
-        # self.epoch_files_1 = files_1[:min_len]
 
-        # assert len(self.epoch_files_0) == len(self.epoch_files_1)
-
-        # self.batches_in_ep = len(self.epoch_files_0)//self.bs_h
         self.batches_in_ep = min_len // self.bs_h
 
     def set_batch_size(self, batch_size):
@@ -83,7 +84,7 @@ class Data_manager:
         return self.bs
 
     def set_val_files(self):
-        files_ = self.epoch_files_by_fold[CSV.FOLD_VAL]
+        files_ = self.epoch_files_by_fold[self.CSV.FOLD_VAL]
         files = []
         labels = []
         for files__, label__ in zip(files_, [[1, 0], [0, 1]]):  # TODO labels
@@ -92,9 +93,7 @@ class Data_manager:
         files = np.concatenate(files)
         labels = np.concatenate(labels)
 
-        # labels_0 = np.array([[1, 0]for i in range(len(files_0))])
-        # labels_1 = np.array([[0, 1]for i in range(len(files_1))])
-        # labels = np.concatenate([labels_0, labels_1])
+
         assert len(files) == len(labels)
 
         self.val_files = files
