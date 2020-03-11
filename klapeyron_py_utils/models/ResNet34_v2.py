@@ -18,7 +18,7 @@ class ResNet34_v2(Base):
     NAME = 'ResNet34_v2'  # TODO
 
     def __init__(self, model_config: Model_Config, train_config: Model_Train_Config):
-        super(ResNet34_v2, self).__init__()
+        super(ResNet34_v2, self).__init__(model_config, train_config)
 
         self.input_shape = model_config.input_shape
 

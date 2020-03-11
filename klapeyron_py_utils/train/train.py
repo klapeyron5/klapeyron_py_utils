@@ -6,7 +6,7 @@ from klapeyron_py_utils.types.common_types import is_any_int
 import numpy as np
 import json
 
-from klapeyron_py_utils.metrics.eer import metrics_EER
+from klapeyron_py_utils.metrics.metrics import metrics_EER
 from klapeyron_py_utils.models.configs.model_config import Model_Config
 from klapeyron_py_utils.models.configs.model_train_config import Model_Train_Config
 
