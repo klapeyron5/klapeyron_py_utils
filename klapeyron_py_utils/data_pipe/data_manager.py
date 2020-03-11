@@ -6,12 +6,12 @@ from klapeyron_py_utils.types.common_types import is_any_int
 
 
 class Data_manager:
-    def __init__(self, batch_size, samples_csv_paths, val_part_options, preproc_trn, preproc_val, start_ep=None, sample_type=CSV.SAMPLE_FILE, select_from_dataset=None):
+    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, start_ep=None, sample_type=CSV.SAMPLE_FILE, select_from_dataset=None):
         self.__get_dataset(samples_csv_paths, sample_type, select_from_dataset)
         self.set_batch_size(batch_size)
         self.__set_folds_files()
         self.__shuffle_trn()
-        self.set_val_files(val_part_options)
+        self.set_val_files()
         self.__resume_ep(start_ep)
         self.set_preprocess_trn(preproc_trn)
         self.set_preprocess_val(preproc_val)
