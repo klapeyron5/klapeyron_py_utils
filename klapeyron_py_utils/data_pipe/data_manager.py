@@ -86,7 +86,6 @@ class Data_manager:
         for files__, label__ in zip(files_, [[1, 0], [0, 1]]):  # TODO labels
             files.append(files__)
             labels.append(np.array([label__ for _ in range(len(files__))]))
-            labels.append(np.array([label__ for _ in range(len(files__))]))
         files = np.concatenate(files)
         labels = np.concatenate(labels)
 
