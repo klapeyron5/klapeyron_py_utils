@@ -4,7 +4,7 @@ from klapeyron_py_utils.logs.filesystem import assert_filepath
 from tqdm import tqdm
 from klapeyron_py_utils.dataset.hash import get_md5_adler32_from_file, get_md5_adler32
 from klapeyron_py_utils.logs.json import json_dump, json_load
-
+import numpy as np
 
 class CSV:
 
@@ -159,3 +159,29 @@ class CSV:
     general_info_key__dataset_hash = 'dataset_hash'
     general_info_key__dataset_and_markup_hash = 'dataset_and_markup_hash'
     dataset_general_info_json = {general_info_key__dataset_hash: None, general_info_key__dataset_and_markup_hash: None}
+
+
+def df_append_single_row(df: pd.DataFrame, row_df):
+        try:
+            max_ind = max(df.index)
+        except Exception:
+            assert len(df.index) == 0
+            max_ind = -1
+        if isinstance(row_df, pd.DataFrame):
+            row_df = row_df.loc[0]
+        assert isinstance(row_df, pd.Series)
+        df.loc[max_ind+1] = row_df
+
+
+def df_append(df: pd.DataFrame, df_last: pd.DataFrame):
+        try:
+            max_ind = max(df.index)
+        except Exception:
+            assert len(df.index) == 0
+            max_ind = -1
+        start = max_ind+1
+        finish = start + len(df_last)
+        new_indexes = np.arange(start, finish)
+        df_last.index = new_indexes
+        df = df.append(df_last)
+        return df
