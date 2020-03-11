@@ -12,7 +12,7 @@ class Data_manager:
         self.__set_folds_files()
         self.__shuffle_trn()
         self.set_val_files()
-        self.__resume_ep(start_ep)
+        self.resume_ep(start_ep)
         self.set_preprocess_trn(preproc_trn)
         self.set_preprocess_val(preproc_val)
 
@@ -79,6 +79,9 @@ class Data_manager:
 
         self.batch_labels = np.array([[1, 0]for _ in range(self.bs_h)] + [[0, 1]for _ in range(self.bs_h)])  # TODO
 
+    def get_batch_size(self):
+        return self.bs
+
     def set_val_files(self):
         files_ = self.epoch_files_by_fold[CSV.FOLD_VAL]
         files = []
@@ -97,7 +100,7 @@ class Data_manager:
         self.val_files = files
         self.val_labels = labels
 
-    def __resume_ep(self, start_ep):
+    def resume_ep(self, start_ep):
         if start_ep is None:
             self.ep = 0
         else:

@@ -16,23 +16,21 @@ class Train_Pipeline:
     LOG_TAG_BEST_EER = 'best_eer'
     RESUME_TAGS = {LOG_TAG_LAST, LOG_TAG_BEST_EER}
 
-    def __init__(self, logs_base_dir, csv_paths, batch_size, val_options,
-                 preproc_trn_funcs_names, preproc_val_funcs_names, data_manager, model: tf.Module = None, resume_from_log=None,
+    def __init__(self, logs_base_dir, csv_paths, data_manager, model: tf.Module = None, resume_from_log=None,
                  start_checkpoint_path=None, start_ep=0, start_b_gl=0):
 
         self.init_logs(logs_base_dir)
 
         self.__resume(resume_from_log, start_checkpoint_path, start_ep, start_b_gl, model)
 
-        self.dm = data_manager(batch_size, csv_paths, val_options, self.ep,
-                               preproc_trn_funcs_names=preproc_trn_funcs_names,
-                               preproc_val_funcs_names=preproc_val_funcs_names)
-        self.batches_in_ep = self.dm.batches_in_ep
+        self.dm = data_manager
+        self.dm.resume_ep(self.ep)
+        self.batches_in_ep = self.dm.batches_in_ep  # TODO
 
         # TODO
         run_info = {
             'csv_paths': csv_paths,
-            'batch_size': batch_size,
+            'batch_size': self.dm.get_batch_size(),
             'start_checkpoint_path': start_checkpoint_path,
             'ep': self.ep,
             'b_gl': self.b_gl
