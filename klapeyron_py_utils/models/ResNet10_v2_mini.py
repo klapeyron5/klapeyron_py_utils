@@ -15,7 +15,7 @@ class ResNet10_v2_mini(Base):
 
     l2_loss = tf.nn.l2_loss(0.0)
 
-    NAME = 'mini'
+    NAME = 'ResNet10_v2_mini'
 
     def __init__(self, model_config: Model_Config, train_config: Model_Train_Config):
         super(ResNet10_v2_mini, self).__init__(model_config, train_config)

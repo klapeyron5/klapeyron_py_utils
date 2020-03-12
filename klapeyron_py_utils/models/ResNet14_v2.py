@@ -15,7 +15,7 @@ class ResNet14_v2(Base):
 
     l2_loss = tf.nn.l2_loss(0.0)
 
-    NAME = 'ResNet18_v2'  # TODO
+    NAME = 'ResNet14_v2'  # TODO
 
     def __init__(self, model_config: Model_Config, train_config: Model_Train_Config):
         super(ResNet14_v2, self).__init__(model_config, train_config)
