@@ -3,13 +3,15 @@ import numpy as np
 from klapeyron_py_utils.dataset.csv import df_append
 from klapeyron_py_utils.data_pipe.data_process_pipe import Data_process_pipe
 from klapeyron_py_utils.types.common_types import is_any_int
+from klapeyron_py_utils.dataset.csv import CSV
 
 
 class Data_manager:
-    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, sample_type, csv_class, start_ep=None, select_from_dataset=None):
+    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, sample_type, csv_class, start_ep=None, select_from_dataset=None, folds_to_trn=[CSV.FOLD_TRN], folds_to_eval=[CSV.FOLD_VAL]):
         self.__set_csv_class(csv_class)
         self.__get_dataset(samples_csv_paths, sample_type, select_from_dataset)
         self.set_batch_size(batch_size)
+        self.__set_folds(folds_to_trn, folds_to_eval)
         self.__set_folds_files()
         self.__shuffle_trn()
         self.set_val_files()
@@ -18,7 +20,6 @@ class Data_manager:
         self.set_preprocess_val(preproc_val)
 
     def __set_csv_class(self, csv_class):
-        from klapeyron_py_utils.dataset.csv import CSV
         assert issubclass(csv_class, CSV)
         self.CSV = csv_class
 
@@ -48,6 +49,13 @@ class Data_manager:
             self.samples_csv = select_from_dataset(self.samples_csv)
             self.CSV.check_csv_columns(self.samples_csv, sample_type)
 
+    def __set_folds(self, folds_to_trn, folds_to_eval):
+        # TODO
+        assert len(folds_to_trn) == 1
+        assert len(folds_to_eval) == 1
+        self.fold_to_trn = folds_to_trn[0]
+        self.fold_to_eval = folds_to_eval[0]
+
     def __set_folds_files(self):
         self.folds_set = set(self.samples_csv[self.CSV.csv_col_fold].values)
         self.labels_set = set(self.samples_csv[self.CSV.csv_col_label].values)
@@ -65,7 +73,10 @@ class Data_manager:
         self.p = 0
         self.b = 0
 
-        files = self.epoch_files_by_fold[self.CSV.FOLD_TRN]
+        files = self.epoch_files_by_fold.get(self.fold_to_trn, None)
+        if files is None:
+            print('no trn samples')
+            return
         files = [np.random.permutation(x) for x in files]
 
         min_len = min([len(x) for x in files])
@@ -84,7 +95,7 @@ class Data_manager:
         return self.bs
 
     def set_val_files(self):
-        files_ = self.epoch_files_by_fold[self.CSV.FOLD_VAL]
+        files_ = self.epoch_files_by_fold[self.fold_to_eval]
         files = []
         labels = []
         for files__, label__ in zip(files_, [[1, 0], [0, 1]]):  # TODO labels
@@ -92,7 +103,6 @@ class Data_manager:
             labels.append(np.array([label__ for _ in range(len(files__))]))
         files = np.concatenate(files)
         labels = np.concatenate(labels)
-
 
         assert len(files) == len(labels)
 
