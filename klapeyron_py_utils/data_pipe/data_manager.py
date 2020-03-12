@@ -138,7 +138,7 @@ class Data_manager:
                                       self.epoch_files[1][self.p:last_p]])
         batch = []
         for file in batch_files:
-            x = self.preproc_trn(**{'filename': file})
+            x = self.preproc_trn(**{'filepath': file})
             batch.append(x)
         batch = np.array(batch)
         self.b += 1
@@ -156,7 +156,7 @@ class Data_manager:
             batch_labels = self.val_labels[p:last_p]
             batch = []
             for file in batch_files:
-                x = self.preproc_val(**{'filename': file})
+                x = self.preproc_val(**{'filepath': file})
                 batch.append(x)
             batch = np.array(batch)
             return batch, batch_labels
