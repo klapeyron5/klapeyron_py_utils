@@ -19,7 +19,7 @@ class Data_manager:
 
     def __set_csv_class(self, csv_class):
         from klapeyron_py_utils.dataset.csv import CSV
-        assert isinstance(csv_class, CSV)
+        assert issubclass(csv_class, CSV)
         self.CSV = csv_class
 
     def __get_dataset(self, samples_csv_path, sample_type, select_from_dataset=None):
