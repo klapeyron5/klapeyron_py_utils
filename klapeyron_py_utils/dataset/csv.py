@@ -16,6 +16,7 @@ class CSV:
 
     FOLD_TRN = 0
     FOLD_VAL = 1
+    FOLD_TST = 2
 
     @staticmethod
     def read_data_csv(csv_path: str, sample_type: SAMPLE_FILE, add_real_path_col=True, check_dataset_hash=False, get_stat=False,
