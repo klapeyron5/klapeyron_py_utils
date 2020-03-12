@@ -11,10 +11,10 @@ class Data_process_pipe:
                 funcs_names_final.append(func_name)
         self.get_config = lambda: funcs_names_final
 
-    def __call__(self, x):
+    def __call__(self, **kwargs):
         for func in self.funcs:
-            x = func(x)
-        return x
+            kwargs = func(**kwargs)
+        return kwargs
 
 
 class Data_process_pipes:
