@@ -34,6 +34,7 @@ class Eval_Pipeline:
         if logs_print:
             print('---val loss:', loss)
             print('---val eer:', eer)
+            print('---val thr:', thr)
 
         return loss, eer
 
