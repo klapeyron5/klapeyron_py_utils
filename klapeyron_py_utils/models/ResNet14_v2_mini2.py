@@ -22,10 +22,10 @@ class ResNet14_v2_mini2(Base):
 
         self.input_shape = model_config.input_shape
 
-        self.conv0 = Layer_conv_bn_relu((7, 7, self.input_shape[-1], 5), 2)
+        self.conv0 = Layer_conv_bn_relu((7, 7, self.input_shape[-1], 4), 2)
 
         Ns = [2, 2, 2]
-        blocks_output_depths = [5, 9, 13]
+        blocks_output_depths = [4, 8, 16]
         block = Residual_block_compact_v3
         self.stack_of_stacks_of_blocks = []
 

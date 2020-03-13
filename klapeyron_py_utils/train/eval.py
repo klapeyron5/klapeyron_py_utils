@@ -5,6 +5,7 @@ tf = import_tensorflow(3)
 import numpy as np
 
 from klapeyron_py_utils.metrics.metrics import metrics_EER
+from matplotlib import pyplot as plt
 
 
 class Eval_Pipeline:
@@ -35,6 +36,13 @@ class Eval_Pipeline:
             print('---val loss:', loss)
             print('---val eer:', eer)
             print('---val thr:', thr)
+
+            fig, ax = plt.subplots()
+            plt.plot(thrs, FPRs, label='FPR')
+            plt.plot(thrs, FNRs, label='FNR')
+            plt.legend()
+            ax.grid()
+            plt.show()
 
         return loss, eer
 
