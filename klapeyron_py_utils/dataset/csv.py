@@ -6,17 +6,37 @@ from klapeyron_py_utils.dataset.hash import get_md5_adler32_from_file, get_md5_a
 from klapeyron_py_utils.logs.json import json_dump, json_load
 import numpy as np
 
+
 class CSV:
 
-    GENERAL_INFO_JSON_NAME = 'general_info.json'
-
-    DATASET_DATA_FOLDER_NAME = 'data'
-
     SAMPLE_FILE = 'file'
+
+    csv_col_path = 'path'
+    csv_col_label = 'label'
+    csv_col_fold = 'fold'
+    CSV_COLUMNS_FILE = [
+        csv_col_path,
+        csv_col_label,
+        csv_col_fold,
+    ]
+
+    SAMPLE_COLUMNS_DICT = {
+        SAMPLE_FILE: CSV_COLUMNS_FILE
+    }
+
+    csv_col_realpath = 'realpath'
 
     FOLD_TRN = 0
     FOLD_VAL = 1
     FOLD_TST = 2
+
+    DATASET_DATA_FOLDER_NAME = 'data'
+
+    GENERAL_INFO_JSON_NAME = 'general_info.json'
+
+    general_info_key__dataset_hash = 'dataset_hash'
+    general_info_key__dataset_and_markup_hash = 'dataset_and_markup_hash'
+    dataset_general_info_json = {general_info_key__dataset_hash: None, general_info_key__dataset_and_markup_hash: None}
 
     @staticmethod
     def read_data_csv(csv_path: str, sample_type: SAMPLE_FILE, add_real_path_col=True, check_dataset_hash=False, get_stat=False,
@@ -31,7 +51,7 @@ class CSV:
         """
         dataset_path, data_path = CSV.check_dataset_structure(csv_path)
 
-        data_csv = pd.read_csv(csv_path, sep=',', index_col='Unnamed: 0')
+        data_csv = CSV.__read_csv_with_pd(csv_path)
 
         CSV.assert_data_csv(data_csv, sample_type, dataset_path, add_real_path_col)
 
@@ -58,6 +78,11 @@ class CSV:
         return dataset_path, data_path
 
     @staticmethod
+    def __read_csv_with_pd(csv_path):
+        data_csv = pd.read_csv(csv_path, sep=',', index_col='Unnamed: 0')
+        return data_csv
+
+    @staticmethod
     def assert_data_csv(data_csv, sample_type, dataset_path, add_real_path_col):
         CSV.check_csv_columns(data_csv, sample_type)
 
@@ -79,6 +104,8 @@ class CSV:
     @staticmethod
     def check_csv_columns(csv: pd.DataFrame, sample_type):
         errmsg = 'Wrong sample type: ' + str(sample_type)
+        assert sample_type in CSV.SAMPLE_COLUMNS_DICT.keys(), errmsg
+        errmsg = 'Not enough columns in csv; set of necessary columns: '+CSV.SAMPLE_COLUMNS_DICT[sample_type]
         assert set(CSV.SAMPLE_COLUMNS_DICT[sample_type]) - set(csv.columns) == set(), errmsg
 
     @staticmethod
@@ -144,25 +171,6 @@ class CSV:
                 print('label:', label, ', n:', len(data_csv_fold_label))
             print()
         print()
-
-    csv_col_path = 'path'
-    csv_col_label = 'label'
-    csv_col_fold = 'fold'
-    CSV_COLUMNS_FILE = [
-        csv_col_path,
-        csv_col_label,
-        csv_col_fold,
-    ]
-
-    SAMPLE_COLUMNS_DICT = {
-        SAMPLE_FILE: CSV_COLUMNS_FILE
-    }
-
-    csv_col_realpath = 'realpath'
-
-    general_info_key__dataset_hash = 'dataset_hash'
-    general_info_key__dataset_and_markup_hash = 'dataset_and_markup_hash'
-    dataset_general_info_json = {general_info_key__dataset_hash: None, general_info_key__dataset_and_markup_hash: None}
 
     @staticmethod
     def append_row(csv, path, label, fold, **kwargs):
