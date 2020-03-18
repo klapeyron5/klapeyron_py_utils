@@ -27,7 +27,7 @@ class Data_process_pipes:
             funcs_names.extend(pipe.get_config())
         self.get_config = lambda: funcs_names
 
-    def __call__(self, x):
+    def __call__(self, **kwargs):
         for func in self.funcs:
-            x = func(x)
+            x = func(**kwargs)
         return x
