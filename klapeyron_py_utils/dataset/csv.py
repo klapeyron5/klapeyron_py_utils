@@ -105,7 +105,7 @@ class CSV:
     def check_csv_columns(csv: pd.DataFrame, sample_type):
         errmsg = 'Wrong sample type: ' + str(sample_type)
         assert sample_type in CSV.SAMPLE_COLUMNS_DICT.keys(), errmsg
-        errmsg = 'Not enough columns in csv; set of necessary columns: '+CSV.SAMPLE_COLUMNS_DICT[sample_type]
+        errmsg = 'Not enough columns in csv; set of necessary columns: '+str(CSV.SAMPLE_COLUMNS_DICT[sample_type])
         assert set(CSV.SAMPLE_COLUMNS_DICT[sample_type]) - set(csv.columns) == set(), errmsg
 
     @staticmethod
