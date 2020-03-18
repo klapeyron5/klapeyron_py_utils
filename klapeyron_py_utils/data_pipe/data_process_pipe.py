@@ -29,5 +29,5 @@ class Data_process_pipes:
 
     def __call__(self, **kwargs):
         for func in self.funcs:
-            x = func(**kwargs)
-        return x
+            kwargs = func(**kwargs)
+        return kwargs
