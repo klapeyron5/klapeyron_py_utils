@@ -101,14 +101,15 @@ class Data_manager:
             np.random.seed(0)  # TODO
             assert isinstance(val_part, dict)
             files_ = self.epoch_files_by_fold[self.fold_to_eval]
-            if val_part.get('min_cut', None) is not None:  # cuts labels of each class to equal min class cardinality
-                assert isinstance(val_part, bool)
+            min_cut = val_part.get('min_cut', None)
+            if min_cut is not None:  # cuts labels of each class to equal min class cardinality
+                assert isinstance(min_cut, bool)
                 if val_part:
                     lens = [len(class_files) for class_files in files_]
                     min_len = min(lens)
                     files_ = [class_files[:min_len] for class_files in files_]
-            if val_part.get('part_cut', None) is not None:  # remains only a part of all samples
-                part = val_part['part_cut']
+            part = val_part.get('part_cut', None)
+            if part is not None:  # remains only a part of all samples
                 assert isinstance(part, float)
                 assert 0 < part <= 1
                 files_ = [np.random.permutation(class_files)[:int(round(part*len(class_files)))] for class_files in files_]
