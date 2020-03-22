@@ -126,7 +126,8 @@ class Data_manager:
         self.val_files = files
         self.val_labels = labels
         print('val_files set up')
-        (print(len(class_files)) for class_files in files_)
+        for class_files in files_:
+            print(len(class_files))
 
     def resume_ep(self, start_ep):
         if start_ep is None:
