@@ -7,14 +7,15 @@ from klapeyron_py_utils.dataset.csv import CSV
 
 
 class Data_manager:
-    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, sample_type, csv_class, start_ep=None, select_from_dataset=None, folds_to_trn=[CSV.FOLD_TRN], folds_to_eval=[CSV.FOLD_VAL]):
+    def __init__(self, batch_size, samples_csv_paths, preproc_trn, preproc_val, sample_type, csv_class,
+                 start_ep=None, select_from_dataset=None, folds_to_trn=[CSV.FOLD_TRN], folds_to_eval=[CSV.FOLD_VAL], val_part=None):  # TODO val_parts
         self.__set_csv_class(csv_class)
         self.__get_dataset(samples_csv_paths, sample_type, select_from_dataset)
         self.set_batch_size(batch_size)
         self.__set_folds(folds_to_trn, folds_to_eval)
         self.__set_folds_files()
         self.__shuffle_trn()
-        self.set_val_files()
+        self.set_val_files(val_part)
         self.resume_ep(start_ep)
         self.set_preprocess_trn(preproc_trn)
         self.set_preprocess_val(preproc_val)
@@ -80,7 +81,7 @@ class Data_manager:
         files = [np.random.permutation(x) for x in files]
 
         min_len = min([len(x) for x in files])
-        self.epoch_files = [x[:min_len] for x in files]
+        self.trn_epoch_files = [x[:min_len] for x in files]
 
         self.batches_in_ep = min_len // self.bs_h
 
@@ -94,8 +95,24 @@ class Data_manager:
     def get_batch_size(self):
         return self.bs
 
-    def set_val_files(self):
-        files_ = self.epoch_files_by_fold[self.fold_to_eval]
+    def set_val_files(self, val_part=None):
+
+        if val_part is not None:  # TODO
+            np.random.seed(0)  # TODO
+            assert isinstance(val_part, dict)
+            files_ = self.epoch_files_by_fold[self.fold_to_eval]
+            if val_part.get('min_cut', None) is not None:  # cuts labels of each class to equal min class cardinality
+                assert isinstance(val_part, bool)
+                if val_part:
+                    lens = [len(class_files) for class_files in files_]
+                    min_len = min(lens)
+                    files_ = [class_files[:min_len] for class_files in files_]
+            if val_part.get('part_cut', None) is not None:  # remains only a part of all samples
+                part = val_part['part_cut']
+                assert isinstance(part, float)
+                assert 0 < part <= 1
+                files_ = [np.random.permutation(class_files)[:int(round(part*len(class_files)))] for class_files in files_]
+
         files = []
         labels = []
         for files__, label__ in zip(files_, [[1, 0], [0, 1]]):  # TODO labels
@@ -108,6 +125,8 @@ class Data_manager:
 
         self.val_files = files
         self.val_labels = labels
+        print('val_files set up')
+        (print(len(class_files)) for class_files in files_)
 
     def resume_ep(self, start_ep):
         if start_ep is None:
@@ -130,12 +149,12 @@ class Data_manager:
         :return: batch data, batch labels, number of batch (in epoch), number of epoch
         """
         last_p = self.p+self.bs_h
-        if last_p > len(self.epoch_files[0]):  # TODO not binary
+        if last_p > len(self.trn_epoch_files[0]):  # TODO not binary
             self.__shuffle_trn()
             self.ep += 1
             last_p = self.p+self.bs_h
-        batch_files = np.concatenate([self.epoch_files[0][self.p:last_p],
-                                      self.epoch_files[1][self.p:last_p]])
+        batch_files = np.concatenate([self.trn_epoch_files[0][self.p:last_p],
+                                      self.trn_epoch_files[1][self.p:last_p]])
         batch = []
         for file in batch_files:
             x = self.preproc_trn(**{'filepath': file})['x']
