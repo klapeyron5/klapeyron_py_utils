@@ -104,7 +104,7 @@ class Data_manager:
             min_cut = val_part.get('min_cut', None)
             if min_cut is not None:  # cuts labels of each class to equal min class cardinality
                 assert isinstance(min_cut, bool)
-                if val_part:
+                if min_cut:
                     lens = [len(class_files) for class_files in files_]
                     min_len = min(lens)
                     files_ = [class_files[:min_len] for class_files in files_]
