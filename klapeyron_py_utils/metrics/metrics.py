@@ -1,10 +1,24 @@
 import numpy as np
 from klapeyron_py_utils.tensorflow.imports import import_tensorflow
 tf = import_tensorflow(3)
+from klapeyron_py_utils.tensorflow.utils import map_arrays
 
 
-def loss(labels, logits):
+def softmax_loss(labels, logits):
     out = tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+    out = tf.reduce_mean(out)
+    return out
+
+
+def softmax_weighted_loss(labels, logits, weights):
+    out = tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+    w = labels*weights
+    w_to_use = tf.argmax(w, axis=1)
+    def f(weight, weight_to_use):
+        return weight[weight_to_use]
+    w = map_arrays(f, [w, w_to_use])
+
+    out = out*w
     out = tf.reduce_mean(out)
     return out
 

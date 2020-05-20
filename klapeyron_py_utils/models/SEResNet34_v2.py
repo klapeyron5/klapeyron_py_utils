@@ -4,11 +4,9 @@ from klapeyron_py_utils.models.blocks.resnet import Layer_conv_bn_relu
 from klapeyron_py_utils.models.blocks.resnet import SEResidual_block_compact_v3, Stack_of_blocks, FC_logits
 from klapeyron_py_utils.models.configs.model_train_config import Model_Train_Config
 from klapeyron_py_utils.models.configs.model_config import Model_Config
-from lecorbusier.nets.base import Base
-from lecorbusier.blocks.metrics import loss, acc
 
 
-class SEResNet34_v2(Base):
+class SEResNet34_v2(tf.Module):
 
     OUTPUT_CHANNELS = 2
     bs = (None,)
@@ -18,7 +16,6 @@ class SEResNet34_v2(Base):
     NAME = 'SEResNet34_v2'  # TODO
 
     def __init__(self, model_config: Model_Config, train_config: Model_Train_Config):
-        super(SEResNet34_v2, self).__init__(model_config, train_config)
 
         self.input_shape = model_config.input_shape
 
@@ -38,7 +35,6 @@ class SEResNet34_v2(Base):
 
         self.fc_logits = FC_logits(output_depth, self.OUTPUT_CHANNELS)
 
-        self.optimizer = train_config.optimizer
         self.reg_l2_beta = train_config.reg_l2_beta
         self.dropout_drop_prob = train_config.dropout_drop_prob
 
@@ -51,24 +47,6 @@ class SEResNet34_v2(Base):
             self.get_logits,
             input_signature=[
                 tf.TensorSpec(self.bs + self.input_shape, tf.float32), tf.TensorSpec([], tf.bool),
-            ])
-        self.train_step = tf.function(
-            self.train_step,
-            input_signature=[
-                tf.TensorSpec(self.bs + self.input_shape, tf.float32),
-                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
-            ])
-        self.loss = tf.function(
-            loss,
-            input_signature=[
-                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
-                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
-            ])
-        self.acc = tf.function(
-            acc,
-            input_signature=[
-                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
-                tf.TensorSpec(self.bs + (self.OUTPUT_CHANNELS,), tf.float32),
             ])
 
     @tf.function
@@ -93,16 +71,6 @@ class SEResNet34_v2(Base):
         return fc_output
 
     @tf.function
-    def train_step(self, data, gt):
-        with tf.GradientTape() as tape:
-            out = self.get_logits(data, True)
-            loss = self.loss(gt, out) + self.reg_loss() * self.reg_l2_beta
-            predicts = tf.nn.softmax(out)
-            acc = self.acc(gt, predicts)
-        grads = tape.gradient(loss, self.trainable_variables)
-        self.optimizer.apply_gradients(list(zip(grads, self.trainable_variables)))
-        return loss, acc
-
     def reg_loss(self):
         l2_loss = tf.nn.l2_loss(0.0)
 

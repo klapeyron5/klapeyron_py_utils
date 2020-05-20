@@ -29,7 +29,7 @@ class Eval_Pipeline:
         labels = np.array(labels)
         predicts = tf.nn.softmax(logits).numpy()
 
-        loss = self.m.loss(labels, logits).numpy()
+        loss = self.m.softmax_loss(labels, logits).numpy()
         eer, thr, (thrs, FPRs, FNRs) = metrics_EER(predicts, labels)
 
         if logs_print:

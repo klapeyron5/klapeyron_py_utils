@@ -1,4 +1,6 @@
-matplotlib
-numpy
-opencv-python
-tensorflow-gpu==2.0.0
+# better to install by hands to don't conflict with your env
+
+# matplotlib
+# numpy
+# opencv-python
+# tensorflow==2.1
