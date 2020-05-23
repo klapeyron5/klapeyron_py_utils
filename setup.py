@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name='klapeyron_py_utils',
-    version='0.8.0.4',
+    version='0.8.1',
     author="Nikita Klapeyron",
     author_email="nikitaklapeyron@gmail.com",
     description="Just my python reusable code",

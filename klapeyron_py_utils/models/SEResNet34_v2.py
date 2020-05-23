@@ -35,7 +35,6 @@ class SEResNet34_v2(tf.Module):
 
         self.fc_logits = FC_logits(output_depth, self.OUTPUT_CHANNELS)
 
-        self.reg_l2_beta = train_config.reg_l2_beta
         self.dropout_drop_prob = train_config.dropout_drop_prob
 
         self.__call__ = tf.function(
@@ -48,6 +47,9 @@ class SEResNet34_v2(tf.Module):
             input_signature=[
                 tf.TensorSpec(self.bs + self.input_shape, tf.float32), tf.TensorSpec([], tf.bool),
             ])
+        self.reg_loss = tf.function(
+            self.reg_loss,
+            input_signature=[])
 
     @tf.function
     def __call__(self, x):
