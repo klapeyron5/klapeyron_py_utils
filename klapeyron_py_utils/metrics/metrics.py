@@ -18,9 +18,9 @@ def softmax_weighted_loss(labels, logits, weights):
         return weight[weight_to_use]
     w = map_arrays(f, [w, w_to_use])
 
-    out = out*w
-    out = tf.reduce_mean(out)
-    return out
+    out_clean = tf.reduce_mean(out)
+    out_weighted = tf.reduce_mean(out*w)
+    return out_weighted, out_clean
 
 
 def acc(labels, predicts):
