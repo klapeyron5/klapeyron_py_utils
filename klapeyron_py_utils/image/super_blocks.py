@@ -1,5 +1,5 @@
 import numpy as np
-from klapeyron_py_utils.types.common_types import is_any_int
+from klapeyron_py_utils.custom_types.common_types import is_any_int
 import cv2
 
 

@@ -1,5 +1,5 @@
 from time import time
-from klapeyron_py_utils.types import common_types
+from klapeyron_py_utils.custom_types import common_types
 
 
 def get_time(f, f_args=[], f_kwargs={}, n_avg=100, warmup=True):

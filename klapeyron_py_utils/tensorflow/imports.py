@@ -1,4 +1,4 @@
-from klapeyron_py_utils.types import common_types
+from klapeyron_py_utils.custom_types import common_types
 
 
 def import_tensorflow(log_level=3):

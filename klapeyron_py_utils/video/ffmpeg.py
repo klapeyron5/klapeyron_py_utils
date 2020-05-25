@@ -2,7 +2,7 @@ import os
 import glob
 import numpy as np
 from klapeyron_py_utils.tmp_folders.tmp_folders import new_tmp, Tmp_erase_protection
-from klapeyron_py_utils.types.common_types import is_any_int
+from klapeyron_py_utils.custom_types.common_types import is_any_int
 
 
 video_extensions = ('.mp4', '.avi', '.mov', '.MOV', '.webm')

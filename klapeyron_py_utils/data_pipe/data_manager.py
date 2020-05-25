@@ -1,9 +1,9 @@
 import os
 import numpy as np
-from klapeyron_py_utils.dataset.csv import df_append
+from klapeyron_py_utils.dataset.data_csv import df_append
 from klapeyron_py_utils.data_pipe.data_process_pipe import Data_process_pipe
-from klapeyron_py_utils.types.common_types import is_any_int
-from klapeyron_py_utils.dataset.csv import CSV
+from klapeyron_py_utils.custom_types.common_types import is_any_int
+from klapeyron_py_utils.dataset.data_csv import CSV
 
 
 class Data_manager:

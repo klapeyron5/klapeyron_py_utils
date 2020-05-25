@@ -2,7 +2,7 @@ import os
 from klapeyron_py_utils.tensorflow.imports import import_tensorflow
 tf = import_tensorflow(3)
 
-from klapeyron_py_utils.types.common_types import is_any_int
+from klapeyron_py_utils.custom_types.common_types import is_any_int
 import numpy as np
 import json
 
