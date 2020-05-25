@@ -24,11 +24,21 @@ def get_N_data(datas, datas_weights):
 
 def one_lvl_datas_weights(datas, datas_weights):
     """
+    :return: datas indexes
+
     :return: array from concatenating and shuffling every data from datas,
     with correspondence to their weights;
     the length of resulting array is possible minimum to provide every sample from every data from datas
     to appear at least once
     """
+    assert isinstance(datas, np.ndarray)
+    assert all([isinstance(x, np.ndarray) for x in datas])
+
+    datas_indxs = []
+    for data in datas:
+        datas_indxs.append(list(range(len(data))))
+    datas = datas_indxs
+
     N_datas = get_N_data(datas, datas_weights)
     N_datas = int(round(N_datas))
     balanced_datas = []
@@ -40,18 +50,29 @@ def one_lvl_datas_weights(datas, datas_weights):
         while len(balanced_data) < N:
             balanced_data.extend(data)
         balanced_data = balanced_data[:N]
-        balanced_datas.extend(balanced_data)
-    assert abs(len(balanced_datas)-N_datas) <= len(datas)
-    balanced_datas = np.random.permutation(balanced_datas)
+        balanced_datas.append(balanced_data)
+    assert abs(sum([len(x) for x in balanced_datas])-N_datas) <= len(datas)
     return balanced_datas
+
+
+def get_datas_from_indexes(datas, datas_indxs):
+    final_datas = []
+    for data, data_indxs in zip(datas, datas_indxs):
+        final_datas.extend(data[data_indxs])
+    final_datas = np.random.permutation(final_datas)
+    return final_datas
 
 
 if __name__ == '__main__':
     def ut(datas, weights, N_gt=None):
+        for i in range(len(datas)):
+            datas[i] = np.array(datas[i])
+        datas = np.array(datas)
         N_datas = get_N_data(datas, weights)
         if N_gt is not None:
             assert N_datas == N_gt
-        balanced_data = one_lvl_datas_weights(datas, weights)
+        balanced_indexes = one_lvl_datas_weights(datas, weights)
+        balanced_data = get_datas_from_indexes(datas, balanced_indexes)
         if N_gt is not None:
             assert len(balanced_data) == N_gt
         return balanced_data
