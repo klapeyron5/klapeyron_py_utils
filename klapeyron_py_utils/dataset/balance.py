@@ -31,7 +31,6 @@ def one_lvl_datas_weights(datas, datas_weights):
     the length of resulting array is possible minimum to provide every sample from every data from datas
     to appear at least once
     """
-    assert isinstance(datas, np.ndarray)
     assert all([isinstance(x, np.ndarray) for x in datas])
 
     datas_indxs = []
