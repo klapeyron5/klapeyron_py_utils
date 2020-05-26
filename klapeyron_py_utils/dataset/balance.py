@@ -58,6 +58,7 @@ def get_datas_from_indexes(datas, datas_indxs):
     final_datas = []
     for data, data_indxs in zip(datas, datas_indxs):
         final_datas.extend(data[data_indxs])
+    final_datas = np.array(final_datas)
     return final_datas
 
 
