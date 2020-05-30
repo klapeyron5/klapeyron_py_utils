@@ -4,6 +4,7 @@ from klapeyron_py_utils.models.configs.model_train_config import Model_Train_Con
 from klapeyron_py_utils.models.configs.model_config import Model_Config
 from klapeyron_py_utils.models.SEResNet34_v2 import SEResNet34_v2
 from klapeyron_py_utils.models.ResNet34_v2 import ResNet34_v2
+from klapeyron_py_utils.models.ResNet34_v2_128out import ResNet34_v2_128out
 from klapeyron_py_utils.metrics.metrics import softmax_loss, softmax_weighted_loss
 
 
@@ -12,7 +13,7 @@ def ut_0():
     model_config = Model_Config(input_shape=input_shape)
     trn_config = Model_Train_Config(reg_l2_beta=0.001, dropout_drop_prob=0.2)
 
-    m = ResNet34_v2(model_config=model_config, train_config=trn_config)
+    m = ResNet34_v2_128out(model_config=model_config, train_config=trn_config)
     print(len(m.trainable_variables))
     tmp_dir = '.tmp/'
     tf.saved_model.save(m, tmp_dir)

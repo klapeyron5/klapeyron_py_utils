@@ -187,6 +187,9 @@ class Residual_block_compact_v3(tf.Module):
         elif input_depth * 2 == output_depth:
             self.bottleneck = True
             self.projection = True
+        elif input_depth != output_depth:  # TODO make block independent from original ResNet structure
+            self.bottleneck = True
+            self.projection = True
         else:
             raise Exception('Wrong block depths for original ResNet18/34. '
                             'Your input_depth is ' + str(input_depth) + ' and output_depth is ' +
