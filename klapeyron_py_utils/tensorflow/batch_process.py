@@ -1,6 +1,6 @@
 import numpy as np
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow()
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow()
 from tensorflow.python.framework.tensor_spec import TensorSpec
 
 

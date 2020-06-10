@@ -1,5 +1,5 @@
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow()
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow()
 
 
 def read_img_as_bytes_ndarray(img_path):

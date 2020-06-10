@@ -1,7 +1,7 @@
 import os
 import shutil
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow()
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow()
 
 
 def export(model: tf.Module, signatures: dict, export_path: str):
