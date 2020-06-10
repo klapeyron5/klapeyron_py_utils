@@ -1,5 +1,5 @@
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow(3)
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow(3)
 from lecorbusier.nets.configs.model_config import Model_Config
 from lecorbusier.nets.configs.model_train_config import Model_Train_Config
 

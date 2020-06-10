@@ -1,5 +1,5 @@
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow(3)
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow(3)
 from klapeyron_py_utils.models.blocks.resnet import Layer_conv_bn_relu
 from klapeyron_py_utils.models.blocks.resnet import Residual_block_compact_v3, Stack_of_blocks, FC_logits
 from klapeyron_py_utils.models.configs.model_train_config import Model_Train_Config

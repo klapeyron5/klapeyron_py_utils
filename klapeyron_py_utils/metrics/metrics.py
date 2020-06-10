@@ -1,6 +1,6 @@
 import numpy as np
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow(3)
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow(3)
 from klapeyron_py_utils.tensorflow.utils import map_arrays
 
 

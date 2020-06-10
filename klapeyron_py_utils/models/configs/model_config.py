@@ -1,5 +1,5 @@
-from klapeyron_py_utils.tensorflow.imports import import_tensorflow
-tf = import_tensorflow(3)
+from klapeyron_py_utils.tensorflow.imports import TfSetup
+tf = TfSetup.import_tensorflow(3)
 from klapeyron_py_utils.custom_types.common_types import is_any_int
 
 
