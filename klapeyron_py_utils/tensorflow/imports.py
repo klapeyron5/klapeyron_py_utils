@@ -42,15 +42,34 @@ class TfSetup:
 
     @classmethod
     def list_all_visible_devices(cls, tf):
-        return tf.config.get_visible_devices()
+        gpus = tf.config.get_visible_devices()  # this initializes gpus
+        return gpus
 
     @classmethod
     def list_all_visible_gpus(cls, tf):
-        return tf.config.get_visible_devices('GPU')
+        gpus =  tf.config.get_visible_devices('GPU')  # this initializes gpus
+        return gpus
+
+    @classmethod
+    def set_gpus_memory_growth_true(cls, tf):
+        gpus = cls.list_all_visible_gpus(tf)
+        if gpus:
+            try:
+                # Currently, memory growth needs to be the same across GPUs
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+            except RuntimeError as e:
+                # Memory growth must be set before GPUs have been initialized
+                print(e)
 
 
 def test():
-    TfSetup.set_visible_devices([0, 2], only_cpu=True)
+    TfSetup.set_visible_devices(gpus=0, only_cpu=False)
     tf = TfSetup.import_tensorflow(3)
-    print(TfSetup.list_all_visible_devices(tf))
     print(TfSetup.list_all_visible_gpus(tf))
+    TfSetup.set_gpus_memory_growth_true(tf)
+    print(TfSetup.list_all_visible_gpus(tf))
+
+
+if __name__ == '__main__':
+    test()
