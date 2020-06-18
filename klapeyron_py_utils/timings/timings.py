@@ -13,7 +13,7 @@ def get_time(f, f_args=[], f_kwargs={}, n_avg=100, warmup=True):
     :return: n_avg times averaged execution time of function f
     """
     assert callable(f)
-    common_types.is_any_int(n_avg)
+    assert common_types.is_any_int(n_avg)
     assert n_avg > 0
     if warmup: f(*f_args, **f_kwargs)
     t = time()
